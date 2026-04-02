@@ -1,0 +1,264 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --b1:#185FA5;--b2:#378ADD;--b3:#B5D4F4;--b4:#E6F1FB;
+  --b800:#0C447C;--b900:#042C53;
+}
+.wrap{font-family:var(--font-sans,sans-serif);padding:20px 16px 20px;max-width:800px;margin:0 auto;}
+.title{background:var(--b1);color:#E6F1FB;text-align:center;font-size:14px;font-weight:500;border-radius:8px;padding:9px 16px;margin-bottom:16px;letter-spacing:.3px}
+.dots{display:flex;gap:5px;justify-content:center;margin-bottom:18px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--color-border-secondary,#ccc);transition:background .2s}
+.dot.on{background:var(--b1)}
+.layout{display:flex;align-items:stretch;gap:0}
+.col-oil{width:52px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.col-oil svg{width:36px;height:50px}
+.col-oil .lbl{font-size:10px;font-weight:500;color:var(--color-text-secondary);text-align:center;line-height:1.3}
+.col-fan{width:38px;flex-shrink:0;position:relative}
+#fanSvg{position:absolute;top:0;left:0;width:38px;overflow:visible}
+.col-main{flex:1;display:flex;gap:0;min-width:0;position:relative}
+.col-rows{flex:1;display:flex;flex-direction:column;gap:7px;min-width:0}
+.col-kq{width:96px;flex-shrink:0;display:flex;flex-direction:column;gap:7px}
+.row{display:flex;align-items:center;height:54px}
+.box{flex:1;height:54px;border-radius:8px;display:flex;flex-direction:column;justify-content:center;padding:0 32px 0 10px;position:relative;cursor:pointer;min-width:0;background:var(--b2);transition:filter .15s}
+.box:hover{filter:brightness(1.1)}
+.box .bt{font-size:11px;font-weight:500;color:#E6F1FB;line-height:1.35}
+.box .bs{font-size:10px;color:rgba(230,241,251,.65);line-height:1.3;margin-top:1px}
+.box .ic{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none}
+.box.b-dark{background:var(--b1)}
+.box.b-mid{background:var(--b800)}
+.arr-mid{width:22px;flex-shrink:0;text-align:center;font-size:20px;color:var(--b1);line-height:54px}
+/* Kết quả: nền đen đặc, chữ trắng + vàng nổi bật */
+.kq{height:54px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 6px;background:#111827;border:1.5px solid var(--b1)}
+.kq .kt{font-size:10px;font-weight:400;color:#93C5FD;line-height:1.3}
+.kq .kh{font-size:12px;font-weight:500;color:#FDE68A;margin-top:3px;line-height:1.3}
+.arr-long{flex:1;height:54px;display:flex;align-items:center;padding:0 4px}
+.arr-long .line{flex:1;height:1.5px;background:var(--b1);border-radius:1px}
+.arr-long .head{font-size:18px;color:var(--b1);line-height:1;margin-left:-3px}
+hr.div{border:none;border-top:1px dashed var(--color-border-tertiary,#ccc);margin:2px 0}
+/* Right labels */
+.col-labels{position:absolute;right:-88px;top:0;width:84px;pointer-events:none}
+.rl{position:absolute;right:0;width:82px;border-left:2px solid var(--b2);padding-left:7px;font-size:9px;font-weight:400;color:var(--color-text-secondary);line-height:1.5;display:flex;flex-direction:column;justify-content:center}
+.rl .rb{font-size:10px;font-weight:500;display:block;margin-top:1px;color:var(--b800)}
+.rl .ri{font-size:13px;display:block;margin-top:2px}
+.h{visibility:hidden;pointer-events:none}
+.hint{text-align:center;margin-top:16px}
+.hint .msg{display:block;margin-bottom:7px;min-height:15px;font-size:11px;color:var(--color-text-secondary)}
+.hint button{background:var(--b4);color:var(--b800);border:0.5px solid var(--b3);border-radius:20px;padding:5px 16px;font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;transition:background .15s}
+.hint button:hover{background:var(--b3)}
+@media(prefers-color-scheme:dark){
+  .kq{background:#0a0f1a;border-color:#378ADD}
+  .kq .kt{color:#93C5FD}
+  .kq .kh{color:#FDE68A}
+  .rl .rb{color:#85B7EB}
+}
+</style>
+<div class="wrap">
+  <div class="title">Cơ chế "Gót chân Achilles" của dầu mỏ</div>
+  <div class="dots">
+    <div class="dot" id="p0"></div><div class="dot" id="p1"></div>
+    <div class="dot" id="p2"></div><div class="dot" id="p3"></div>
+    <div class="dot" id="p4"></div><div class="dot" id="p5"></div>
+    <div class="dot" id="p6"></div>
+  </div>
+
+  <div class="layout">
+    <!-- oil drop: đen -->
+    <div class="col-oil" id="oilCol">
+      <svg viewBox="0 0 36 50">
+        <path d="M18 2Q29 20 34 32Q34 48 18 48Q2 48 2 32Q7 20 18 2Z" fill="#1a1a1a"/>
+        <path d="M18 13Q23 24 25 34Q25 44 18 47Q11 44 11 34Q13 24 18 13Z" fill="#3a3a3a"/>
+        <path d="M13 30Q12 38 18 44" fill="none" stroke="#555" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+      </svg>
+      <div class="lbl">Dầu<br>mỏ</div>
+    </div>
+
+    <!-- fan arrows -->
+    <div class="col-fan" id="fanCol">
+      <svg id="fanSvg"></svg>
+    </div>
+
+    <!-- main -->
+    <div class="col-main" id="colMain">
+      <div class="col-rows" id="colRows">
+        <div class="row" id="row1">
+          <div class="box" id="b1" onclick="step('b1')">
+            <span class="bt">1. Xăng / dầu diesel</span>
+            <span class="bs">Nhiên liệu vận tải</span>
+            <span class="ic">⛽</span>
+          </div>
+          <div class="arr-mid h" id="ar1">›</div>
+          <div class="box b-dark h" id="b2" onclick="step('b2')">
+            <span class="bt">Chi phí vận tải tăng</span>
+            <span class="bs">Hàng hoá đắt hơn</span>
+            <span class="ic">🚚</span>
+          </div>
+        </div>
+        <div class="row" id="row2">
+          <div class="box h" id="b4" onclick="step('b4')">
+            <span class="bt">2. Phân bón</span>
+            <span class="bs">Nguyên liệu từ dầu khí</span>
+            <span class="ic">🌱</span>
+          </div>
+          <div class="arr-mid h" id="ar4">›</div>
+          <div class="box b-dark h" id="b5" onclick="step('b5')">
+            <span class="bt">Chi phí canh tác tăng</span>
+            <span class="bs">Năng suất bị ảnh hưởng</span>
+            <span class="ic">🌾</span>
+          </div>
+        </div>
+        <div class="row" id="row3">
+          <div class="box h" id="b7" onclick="step('b7')">
+            <span class="bt">3. Nhựa / hoá dầu</span>
+            <span class="bs">Bao bì, vật liệu</span>
+            <span class="ic">🧴</span>
+          </div>
+          <div class="arr-mid h" id="ar7">›</div>
+          <div class="box b-dark h" id="b8" onclick="step('b8')">
+            <span class="bt">Bao bì / đóng gói tăng</span>
+            <span class="bs">Chi phí lan toàn ngành</span>
+            <span class="ic">📦</span>
+          </div>
+        </div>
+        <hr class="div">
+        <div class="row" id="row4">
+          <div class="box b-mid h" id="b10" onclick="step('b10')">
+            <span class="bt">4. Điện hộ gia đình</span>
+            <span class="bs">Nhiệt điện / sưởi ấm</span>
+            <span class="ic">🏠</span>
+          </div>
+          <div class="arr-long h" id="ar10">
+            <div class="line"></div><div class="head">›</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- kết quả -->
+      <div class="col-kq" id="colKq">
+        <div class="kq h" id="kq1">
+          <span class="kt">Hàng hoá</span>
+          <span class="kh">đắt đỏ</span>
+        </div>
+        <div class="kq h" id="kq2">
+          <span class="kt">Giá thực phẩm</span>
+          <span class="kh">leo thang</span>
+        </div>
+        <div class="kq h" id="kq3">
+          <span class="kt">Mọi mặt hàng</span>
+          <span class="kh">tăng giá</span>
+        </div>
+        <hr class="div" style="border-color:transparent">
+        <div class="kq h" id="kq4">
+          <span class="kt">Hoá đơn</span>
+          <span class="kh">đắt đỏ</span>
+        </div>
+      </div>
+
+      <!-- right labels -->
+      <div class="col-labels" id="colLabels">
+        <div class="rl h" id="rl1">
+          Người tiêu dùng gánh
+          <span class="rb">"Tác động kép"</span>
+          <span class="ri">👛 🥦</span>
+        </div>
+        <div class="rl h" id="rl2">
+          Người tiêu dùng gánh
+          <span class="rb">"Tác động kép"</span>
+          <span class="ri">💸</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hint">
+    <span class="msg" id="hintMsg">Bấm vào ô đầu tiên để bắt đầu</span>
+    <button onclick="doReset()">↺ Xem lại</button>
+  </div>
+</div>
+
+<script>
+var seq=['b1','b2','b4','b5','b7','b8','b10'],cur=0;
+var rev={
+  'b1':['ar1','b2'],
+  'b2':['kq1','b4'],
+  'b4':['ar4','b5'],
+  'b5':['kq2','b7'],
+  'b7':['ar7','b8'],
+  'b8':['kq3','b10','rl1'],
+  'b10':['ar10','kq4','rl2']
+};
+var hints=[
+  'Bấm "Xăng / dầu diesel" để bắt đầu',
+  'Bấm "Chi phí vận tải tăng"',
+  'Bấm "Phân bón"',
+  'Bấm "Chi phí canh tác tăng"',
+  'Bấm "Nhựa / hoá dầu"',
+  'Bấm "Bao bì / đóng gói tăng"',
+  'Bấm "Điện hộ gia đình"',
+  ''
+];
+function show(id){var e=document.getElementById(id);if(e)e.classList.remove('h')}
+function hide(id){var e=document.getElementById(id);if(e)e.classList.add('h')}
+function step(id){
+  if(seq[cur]!==id)return;
+  (rev[id]||[]).forEach(show);
+  var el=document.getElementById(id);
+  if(el){el.onclick=null;el.style.cursor='default';el.style.filter='none'}
+  cur++;updDots();updHint();redrawFan();posLabels();
+}
+function updDots(){
+  for(var i=0;i<7;i++){var d=document.getElementById('p'+i);if(d)d.className='dot'+(i<cur?' on':'');}
+}
+function updHint(){var e=document.getElementById('hintMsg');if(e)e.textContent=hints[cur]||'';}
+function doReset(){
+  cur=0;
+  ['ar1','b2','kq1','b4','ar4','b5','kq2','b7','ar7','b8','kq3','b10','ar10','kq4','rl1','rl2'].forEach(hide);
+  var h={'b1':function(){step('b1')},'b2':function(){step('b2')},'b4':function(){step('b4')},
+    'b5':function(){step('b5')},'b7':function(){step('b7')},'b8':function(){step('b8')},'b10':function(){step('b10')}};
+  for(var id in h){var el=document.getElementById(id);if(el){el.onclick=h[id];el.style.cursor='pointer';el.style.filter='';}}
+  updDots();updHint();redrawFan();posLabels();
+}
+function redrawFan(){
+  var svg=document.getElementById('fanSvg');
+  var fanCol=document.getElementById('fanCol');
+  var oilCol=document.getElementById('oilCol');
+  var fanRect=fanCol.getBoundingClientRect();
+  var oilRect=oilCol.getBoundingClientRect();
+  var totalH=fanCol.offsetHeight||300;
+  svg.setAttribute('height',totalH);svg.innerHTML='';
+  var ns='http://www.w3.org/2000/svg';
+  var defs=document.createElementNS(ns,'defs');
+  defs.innerHTML='<marker id="fa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 2L8 5L2 8" fill="none" stroke="#185FA5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>';
+  svg.appendChild(defs);
+  var oilCY=(oilRect.top+oilRect.height/2)-fanRect.top;
+  ['b1','b4','b7','b10'].forEach(function(id){
+    var box=document.getElementById(id);
+    if(!box||box.classList.contains('h'))return;
+    var bRect=box.getBoundingClientRect();
+    var endY=(bRect.top+bRect.height/2)-fanRect.top;
+    var p=document.createElementNS(ns,'path');
+    p.setAttribute('d','M0 '+oilCY.toFixed(1)+' C19 '+oilCY.toFixed(1)+' 19 '+endY.toFixed(1)+' 38 '+endY.toFixed(1));
+    p.setAttribute('fill','none');p.setAttribute('stroke','#185FA5');
+    p.setAttribute('stroke-width','1.5');p.setAttribute('marker-end','url(#fa)');
+    svg.appendChild(p);
+  });
+}
+function posLabels(){
+  var main=document.getElementById('colMain');
+  var mainRect=main.getBoundingClientRect();
+  var r1=document.getElementById('row1'),r3=document.getElementById('row3'),rl1=document.getElementById('rl1');
+  if(r1&&r3&&rl1){
+    var top=r1.getBoundingClientRect().top-mainRect.top;
+    var bot=r3.getBoundingClientRect().bottom-mainRect.top;
+    rl1.style.top=top+'px';rl1.style.height=(bot-top)+'px';
+  }
+  var r4=document.getElementById('row4'),rl2=document.getElementById('rl2');
+  if(r4&&rl2){
+    var t4=r4.getBoundingClientRect().top-mainRect.top;
+    var b4=r4.getBoundingClientRect().bottom-mainRect.top;
+    rl2.style.top=t4+'px';rl2.style.height=(b4-t4)+'px';
+  }
+}
+window.addEventListener('load',function(){updHint();setTimeout(function(){redrawFan();posLabels();},80);});
+window.addEventListener('resize',function(){redrawFan();posLabels();});
+</script>
